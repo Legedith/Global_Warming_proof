@@ -174,24 +174,46 @@ def evaluate_models_on_training(x, y, models):
         None
     """
     pyplot.plot(x,y,'bo')
+    for i in models:
+        pyplot.plot(x,pylab.polyval(i,x), label='R^2 = '+str(r_squared(y,pylab.polyval(i,x))))
+    pylab.title('Year vs Temp.')
+    pylab.legend(loc = 'best')
+    pylab.xlabel('Year')
+    pylab.ylabel('Temperature')
 
 
 ### Begining of program
 raw_data = Climate('data.csv')
 
 # Problem 3
-y = []
-x = INTERVAL_1
-for year in INTERVAL_1:
-    y.append(raw_data.get_daily_temp('BOSTON', 1, 10, year))
-models = generate_models(x, y, [1])
-evaluate_models_on_training(x, y, models)
-
-
-## Problem 4: FILL IN MISSING CODE TO GENERATE y VALUES
-#x1 = INTERVAL_1
-#x2 = INTERVAL_2
 #y = []
-## MISSING LINES
-#models = generate_models(x, y, [1])    
+#x = INTERVAL_1
+#for year in INTERVAL_1:
+#    y.append(raw_data.get_daily_temp('BOSTON', 1, 10, year))
+#models = generate_models(x, y, [1,2])
 #evaluate_models_on_training(x, y, models)
+
+
+# Problem 4: FILL IN MISSING CODE TO GENERATE y VALUES
+x1 = INTERVAL_1
+x2 = INTERVAL_2
+y = [0]*45
+for i, year in enumerate(INTERVAL_1):
+    for city in CITIES:
+        y[i]+=np.mean(raw_data.get_yearly_temp(city, year))
+y = [i/21 for i in y]
+models = generate_models(x1, y, [1])    
+evaluate_models_on_training(x1, y, models)
+
+
+## For all cities over time
+#y={}
+#for city in CITIES:
+#    for year in INTERVAL_1:
+#        try:
+#            y[city].append(np.mean(raw_data.get_yearly_temp(city, year)))
+#        except:
+#            y[city] = [np.mean(raw_data.get_yearly_temp(city, year))]
+#for i in y:
+#    models = generate_models(x1, y[i], [1])    
+#    evaluate_models_on_training(x1, y[i], models)
